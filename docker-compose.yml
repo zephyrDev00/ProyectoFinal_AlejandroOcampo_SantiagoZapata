@@ -1,0 +1,54 @@
+services:
+  db:
+    profiles: ["container-db"]
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-vinilos_bi}
+      POSTGRES_USER: ${POSTGRES_USER:-bi_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en .env}
+    ports: ["127.0.0.1:${CONTAINER_POSTGRES_PORT:-5433}:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  etl:
+    build: ./etl
+    profiles: ["etl"]
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-bi_user}:${POSTGRES_PASSWORD}@host.docker.internal:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-vinilos_bi}
+      SOURCE_FILE: /source/SEGUIMIENTO TEMPERAS Y VINILOS Actividad.xlsm
+    volumes:
+      - ./data:/source:ro
+      - ./logs:/logs
+  grafana:
+    image: grafana/grafana:11.4.0
+    ports: ["127.0.0.1:3001:3000"]
+    environment:
+      POSTGRES_HOST: host.docker.internal
+      POSTGRES_HOST_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_DB: ${POSTGRES_DB:-vinilos_bi}
+      POSTGRES_USER: ${POSTGRES_USER:-bi_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_RENDERING_SERVER_URL: http://renderer:8081/render
+      GF_RENDERING_CALLBACK_URL: http://grafana:3000/
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+  renderer:
+    profiles: ["capture"]
+    image: grafana/grafana-image-renderer:latest
+    environment:
+      HTTP_PORT: 8081
+volumes:
+  pgdata:
+  grafana_data:

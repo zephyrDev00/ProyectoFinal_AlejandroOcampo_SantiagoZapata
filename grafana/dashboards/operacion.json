@@ -1,0 +1,127 @@
+{
+  "uid": "vinilos-operacion",
+  "title": "Operación - Líneas Vinilos",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "1m",
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "machine",
+        "type": "query",
+        "datasource": {
+          "type": "postgres",
+          "uid": "vinilosdw"
+        },
+        "query": "SELECT machine_code FROM dw.dim_machine ORDER BY 1",
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Paro últimos 60 min (%)",
+      "datasource": {
+        "type": "postgres",
+        "uid": "vinilosdw"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT 100*SUM(downtime_minutes)/NULLIF(SUM(planned_minutes),0) AS value FROM dw.fact_live_hour h JOIN dw.dim_machine m USING(machine_key) WHERE h.hour_start >= now()-interval '60 minutes' AND m.machine_code ~ '${machine:regex}'"
+        }
+      ],
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "orientation": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 20
+              }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Minutos de paro y marcha por hora",
+      "datasource": {
+        "type": "postgres",
+        "uid": "vinilosdw"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 6,
+        "y": 0
+      },
+      "targets": [
+        {
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT hour_start AS time, sum(downtime_minutes) AS paro_min, sum(run_minutes) AS marcha_min FROM dw.fact_live_hour h JOIN dw.dim_machine m USING(machine_key) WHERE $__timeFilter(hour_start) AND m.machine_code ~ '${machine:regex}' GROUP BY 1 ORDER BY 1"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "table",
+      "title": "Estado más reciente por línea",
+      "datasource": {
+        "type": "postgres",
+        "uid": "vinilosdw"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT DISTINCT ON(m.machine_code) m.machine_code,h.downtime_minutes,CASE WHEN h.downtime_minutes/h.planned_minutes>0.2 THEN 'ALERTA' ELSE 'NORMAL' END AS estado FROM dw.fact_live_hour h JOIN dw.dim_machine m USING(machine_key) ORDER BY m.machine_code,h.hour_start DESC"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+El dashboard usa PostgreSQL directo y la regla `provisioning/alerting/rules.yml` evalúa cada minuto el paro en los últimos 60 minutos. Si supera 20% (12 min de paro en 60 min planificados), crea una alerta Grafana. Es un umbral de demostración, no meta aprobada. `docker compose --profile etl run --rm etl python simulate.py --trigger` simula 18 min de paro en Vinilos_1; cambiar a `simulate.py` para el escenario base.
+
+La alerta queda visible en Grafana Alerting. Para notificaciones por correo/chat, un administrador debe configurar un contact point corporativo y su política de notificación. No se incluyen endpoints personales ni credenciales. La tabla horaria se alimenta con `etl/simulate.py`; el histórico no se presenta como tiempo real.
