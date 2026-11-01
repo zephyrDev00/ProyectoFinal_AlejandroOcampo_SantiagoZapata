@@ -1,0 +1,13 @@
+# Fuentes y datos locales, nunca publicar
+*.xlsm
+*.xlsx
+/data/*.csv
+.env
+__pycache__/
+*.pyc
+.DS_Store
+.vscode/
+/logs/
+
+# Power BI local caches and credentials
+**/.pbi/

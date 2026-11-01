@@ -1,0 +1,9 @@
+indicador,formula,unidad,granularidad,umbral_meta,fuente,usuario,observaciones
+Pacas producidas,SUM(pacas),pacas,máquina-mes,Sin meta confirmada,Base De Datos!J,Gerencia/Producción,Volumen reportado
+Horas operativas,SUM(horas trabajadas),h,máquina-mes,Sin meta confirmada,Base De Datos!K,Producción,Validar semántica
+Horas no trabajadas,SUM(horas no trabajadas),h,máquina-mes,Sin meta confirmada,Base De Datos!M,Producción/Mantenimiento,No concuerda necesariamente con detalle
+Paro detallado,SUM(Codigo n en horas),h,máquina-mes-causa,Sin meta confirmada,Base De Datos!R:BD,Mantenimiento,Preservar categoría no mapeada
+Disponibilidad proxy,operación/(operación+no trabajadas),%,máquina-mes,Meta por aprobar,Base De Datos!K y M,Supervisor,Denominador provisional no equivale a calendario planificado
+Productividad de registro,pacas/horas operativas,pacas/h,máquina-mes,Comparar línea base,Base De Datos!J y K,Gerencia,No es rendimiento OEE sin ciclo ideal
+OEE,Disponibilidad*Rendimiento*Calidad,%,máquina-turno-producto,No calculable,No disponible,Gerencia,Requiere tiempo planificado ciclo ideal y unidades buenas
+Paro móvil 60 min,paro_minutos/tiempo_planificado_minutos,%,máquina-hora,Alerta >20% provisional,fact_live_hour,Supervisor,12 min/60 como alarma demo; aprobar baseline
