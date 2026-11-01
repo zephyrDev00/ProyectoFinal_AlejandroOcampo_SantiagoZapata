@@ -1,0 +1,58 @@
+table dim_shift
+	lineageTag: debb97fd-0f17-4046-9600-da08b2b692cf
+
+	column shift_key
+		dataType: int64
+		lineageTag: 96fdbb17-3017-4e47-b598-c219855d3d47
+		summarizeBy: none
+		sourceColumn: shift_key
+
+	column shift_code
+		dataType: string
+		lineageTag: 844f497a-8f5d-46bf-848e-a201d8dd452c
+		summarizeBy: none
+		sourceColumn: shift_code
+
+	column shift_name
+		dataType: string
+		lineageTag: 4e43cb92-2815-498e-a3c6-0b88737ae544
+		summarizeBy: none
+		sourceColumn: shift_name
+
+	column start_time
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: 6b578e89-cbb3-48ab-ad47-8dedae6c22bd
+		summarizeBy: none
+		sourceColumn: start_time
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column end_time
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: 7528b187-c417-43f1-ae04-7e7fea709a79
+		summarizeBy: none
+		sourceColumn: end_time
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column shift_group
+		dataType: string
+		lineageTag: 4fff146d-b9c8-4c3f-97a5-47e3c1c0bc06
+		summarizeBy: none
+		sourceColumn: shift_group
+
+	partition dim_shift = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5433", "vinilos_bi", [CreateNavigationProperties=false, HierarchicalNavigation=false]),
+				    Data = Source{[Schema="dw", Item="dim_shift"]}[Data]
+				in
+				    Data
+

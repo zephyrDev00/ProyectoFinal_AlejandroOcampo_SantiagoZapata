@@ -1,0 +1,79 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "e6e3d33a17ec40f09b6f",
+  "position": {
+    "x": 640,
+    "y": 493,
+    "z": 0,
+    "height": 205,
+    "width": 616,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_shift"
+                    }
+                  },
+                  "Property": "shift_name"
+                }
+              },
+              "queryRef": "dim_shift.shift_name",
+              "nativeQueryRef": "shift_name",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_downtime"
+                    }
+                  },
+                  "Property": "Paro detallado (h)"
+                }
+              },
+              "queryRef": "fact_downtime.Paro detallado (h)",
+              "nativeQueryRef": "Paro detallado (h)"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Horas de paro por turno'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,36 @@
+table dim_reference
+	lineageTag: 0fb34636-8335-4b26-aa85-d4a45f292bf7
+
+	column reference_key
+		dataType: int64
+		lineageTag: 74cef06d-babd-4083-a3ea-e8721ecdd1ee
+		summarizeBy: none
+		sourceColumn: reference_key
+
+	column reference_name
+		dataType: string
+		lineageTag: fc90aae1-9569-4e16-8181-da1afcfb73c8
+		summarizeBy: none
+		sourceColumn: reference_name
+
+	column family
+		dataType: string
+		lineageTag: a1ad0e61-2e98-463e-99e2-4521479c0602
+		summarizeBy: none
+		sourceColumn: family
+
+	column nominal_pack_size
+		dataType: string
+		lineageTag: bc66f61e-d012-4c69-8cc0-6ff501a2d559
+		summarizeBy: none
+		sourceColumn: nominal_pack_size
+
+	partition dim_reference = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5433", "vinilos_bi", [CreateNavigationProperties=false, HierarchicalNavigation=false]),
+				    Data = Source{[Schema="dw", Item="dim_reference"]}[Data]
+				in
+				    Data
+

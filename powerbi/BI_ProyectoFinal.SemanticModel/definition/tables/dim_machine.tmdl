@@ -1,0 +1,42 @@
+table dim_machine
+	lineageTag: 64e6ac28-e373-45ca-aeda-561e4ac53289
+
+	column machine_key
+		dataType: int64
+		lineageTag: 04b64455-0664-46c1-a0bb-966ae2b56b6b
+		summarizeBy: none
+		sourceColumn: machine_key
+
+	column machine_code
+		dataType: string
+		lineageTag: 8ca394fb-cb7d-46a8-9423-b5f5f23d563e
+		summarizeBy: none
+		sourceColumn: machine_code
+
+	column machine_name
+		dataType: string
+		lineageTag: dc44b6b7-2b3c-4654-9240-a0ba26b06524
+		summarizeBy: none
+		sourceColumn: machine_name
+
+	column line_number
+		dataType: int64
+		lineageTag: 6874eec9-e5f5-429b-a43f-dc770978e13d
+		summarizeBy: none
+		sourceColumn: line_number
+
+	column active
+		dataType: boolean
+		lineageTag: 2a918ea3-6bc4-431b-a8b0-6162381fcf50
+		summarizeBy: none
+		sourceColumn: active
+
+	partition dim_machine = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5433", "vinilos_bi", [CreateNavigationProperties=false, HierarchicalNavigation=false]),
+				    Data = Source{[Schema="dw", Item="dim_machine"]}[Data]
+				in
+				    Data
+

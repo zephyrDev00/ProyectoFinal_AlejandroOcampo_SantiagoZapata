@@ -1,0 +1,83 @@
+table dim_stop
+	lineageTag: 43cc153f-08bc-48be-ae51-b6c90ef29edf
+
+	column stop_key
+		dataType: int64
+		lineageTag: c9819df8-0d7e-4f2a-9790-2fdf92515dbc
+		summarizeBy: none
+		sourceColumn: stop_key
+
+	column stop_source_token
+		dataType: string
+		lineageTag: abb2f08c-6cb6-47ce-a9fc-30164e1b3002
+		summarizeBy: none
+		sourceColumn: stop_source_token
+
+	column stop_code
+		dataType: string
+		lineageTag: 41215605-cdd9-4777-b944-d1a099f50053
+		summarizeBy: none
+		sourceColumn: stop_code
+
+	column stop_label
+		dataType: string
+		lineageTag: 42f10e9f-09e5-4996-a864-69a205b2d1f2
+		summarizeBy: none
+		sourceColumn: stop_label
+
+	column subcode
+		dataType: string
+		lineageTag: 9c301201-4eeb-40f6-8764-b03949cd4137
+		summarizeBy: none
+		sourceColumn: subcode
+
+	column subcode_label
+		dataType: string
+		lineageTag: c3ef55ad-ef62-4c6b-b2e3-38e3602c6e57
+		summarizeBy: none
+		sourceColumn: subcode_label
+
+	column impact_area
+		dataType: string
+		lineageTag: 9292a63e-ac54-4b40-b535-9db4f8e8b55e
+		summarizeBy: none
+		sourceColumn: impact_area
+
+	column owner_group
+		dataType: string
+		lineageTag: 7a940a11-282e-448b-b0b6-c65c624edd24
+		summarizeBy: none
+		sourceColumn: owner_group
+
+	column hierarchy_level
+		dataType: string
+		lineageTag: c706670b-9cf5-448e-ab6a-9d9781efe47d
+		summarizeBy: none
+		sourceColumn: hierarchy_level
+
+	column is_mapped
+		dataType: boolean
+		lineageTag: b7786eb5-f8fc-445c-96bd-2767919c7f19
+		summarizeBy: none
+		sourceColumn: is_mapped
+
+	hierarchy 'Jerarquía de paros'
+		lineageTag: fe3863cd-8e8b-4b0d-a2bc-b4807e65a725
+
+		level Categoría
+			lineageTag: 2be8f811-996b-403f-9dda-9cfa78ca779e
+			column: stop_label
+
+		level Subcódigo
+			lineageTag: 5b2a2a9c-0def-43a9-9200-b49b9b3114a9
+			column: subcode_label
+
+	partition dim_stop = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5433", "vinilos_bi", [CreateNavigationProperties=false, HierarchicalNavigation=false]),
+				    Data = Source{[Schema="dw", Item="dim_stop"]}[Data]
+				in
+				    Data
+

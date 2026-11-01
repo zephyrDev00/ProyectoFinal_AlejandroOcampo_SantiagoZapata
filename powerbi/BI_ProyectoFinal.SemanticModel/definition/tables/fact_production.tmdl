@@ -1,0 +1,141 @@
+table fact_production
+	lineageTag: e62e3f6a-e6b3-49d6-a6ed-cff198f65366
+
+	measure Pacas = SUM(fact_production[cases_produced])
+		formatString: #,##0
+		lineageTag: 459e5a5c-bb96-4e85-b32c-022f20d367b4
+
+	measure 'Horas operativas registradas' = SUM(fact_production[operating_hours])
+		formatString: #,##0.00
+		lineageTag: 496a80f5-6e4f-4dcd-8a46-f9ddf44e5dbf
+
+	measure 'Horas no trabajadas reportadas' = SUM(fact_production[reported_nonworking_hours])
+		formatString: #,##0.00
+		lineageTag: ea3db612-0b27-41ee-bd94-bb1be3a28e13
+
+	measure 'Disponibilidad proxy' = DIVIDE([Horas operativas registradas],[Horas operativas registradas]+[Horas no trabajadas reportadas])
+		formatString: 0.0%
+		lineageTag: 8b682893-c431-4b0e-b895-4e9323168608
+
+	measure 'Pacas por hora' = DIVIDE([Pacas],[Horas operativas registradas])
+		formatString: #,##0.0
+		lineageTag: 3e7e8ec0-d10d-42d3-aea9-fa9a4aa4af37
+
+	measure 'Pacas año anterior' = CALCULATE([Pacas],SAMEPERIODLASTYEAR(dim_date[full_date]))
+		formatString: #,##0
+		lineageTag: 192785fc-b4a5-4b43-ad45-b494dddc7259
+
+	measure 'Variación interanual %' = DIVIDE([Pacas]-[Pacas año anterior],[Pacas año anterior])
+		formatString: 0.0%
+		lineageTag: 6865ebe3-0f21-4791-8318-9939b01d37f0
+
+	measure OEE = BLANK()
+		formatString: 0.0%
+		lineageTag: 7ef8b2fd-e501-4a20-b096-6e84ed3c8cbc
+
+	column source_row_id
+		dataType: int64
+		lineageTag: 19ba8c78-eae3-48c4-9f83-c2d5a1b26208
+		summarizeBy: sum
+		sourceColumn: source_row_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_key
+		dataType: int64
+		lineageTag: 24604a68-3a6f-45a6-a307-2baf911306b7
+		summarizeBy: none
+		sourceColumn: date_key
+
+	column machine_key
+		dataType: int64
+		lineageTag: e15cd0ed-f42d-4302-b9f8-3bf2c5fb32bc
+		summarizeBy: none
+		sourceColumn: machine_key
+
+	column shift_key
+		dataType: int64
+		lineageTag: 887b9310-327d-4229-beca-955616ccb568
+		summarizeBy: none
+		sourceColumn: shift_key
+
+	column reference_key
+		dataType: int64
+		lineageTag: f906a430-cb75-4f95-9869-f77ed56d5019
+		summarizeBy: none
+		sourceColumn: reference_key
+
+	column record_count
+		dataType: int64
+		lineageTag: c5688725-7e51-426a-99bc-ef43acb0de3b
+		summarizeBy: sum
+		sourceColumn: record_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column cases_produced
+		dataType: double
+		lineageTag: c4466e62-83de-4108-b62b-e3c0990dc476
+		summarizeBy: sum
+		sourceColumn: cases_produced
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column operating_hours
+		dataType: double
+		lineageTag: 69cdd7f6-31b9-4bc8-92eb-7ea1f7a72651
+		summarizeBy: sum
+		sourceColumn: operating_hours
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column reported_nonworking_hours
+		dataType: double
+		lineageTag: 7fe83056-414d-45dc-b1eb-4cf777c61b9f
+		summarizeBy: sum
+		sourceColumn: reported_nonworking_hours
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column reported_downtime_hours
+		dataType: double
+		lineageTag: 6b3c68cc-7404-41d8-893b-c9709bcfe603
+		summarizeBy: sum
+		sourceColumn: reported_downtime_hours
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column source_sheet
+		dataType: string
+		lineageTag: d4a778e0-a21e-420a-989f-cd91832f0deb
+		summarizeBy: none
+		sourceColumn: source_sheet
+
+	column source_excel_row
+		dataType: int64
+		lineageTag: 845b2d19-c378-41d1-8dd2-a6ac28c56a6e
+		summarizeBy: sum
+		sourceColumn: source_excel_row
+
+		annotation SummarizationSetBy = Automatic
+
+	column loaded_at
+		dataType: dateTime
+		lineageTag: 1ecdabf5-adb0-40da-bef0-131dd1b652ef
+		summarizeBy: none
+		sourceColumn: loaded_at
+
+		variation Variation
+			isDefault
+			relationship: c0edf9fe-8d15-4b92-9057-ca7d08463a0d
+			defaultHierarchy: LocalDateTable_9033df13-ca16-410e-944b-90aa039c3262.'Jerarquía de fechas'
+
+	partition fact_production = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5433", "vinilos_bi", [CreateNavigationProperties=false, HierarchicalNavigation=false]),
+				    Data = Source{[Schema="dw", Item="fact_production"]}[Data]
+				in
+				    Data
+

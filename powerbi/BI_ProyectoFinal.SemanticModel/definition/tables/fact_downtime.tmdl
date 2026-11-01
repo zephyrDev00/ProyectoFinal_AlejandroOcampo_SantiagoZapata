@@ -1,0 +1,82 @@
+table fact_downtime
+	lineageTag: 594f3afc-7acc-45f5-850a-851be2a7306e
+
+	measure 'Paro detallado (h)' = SUM(fact_downtime[duration_hours])
+		formatString: #,##0.00
+		lineageTag: eaa85ba8-0810-4140-be82-4c8a7c882826
+
+	measure '% paro Pareto' = DIVIDE([Paro detallado (h)],CALCULATE([Paro detallado (h)],ALL(dim_stop)))
+		formatString: 0.0%
+		lineageTag: 59e023d4-104a-479f-a3df-45e8e93d201c
+
+	column downtime_id
+		dataType: int64
+		lineageTag: e4ab44de-b65e-4a6c-a73b-be7a0ba6db94
+		summarizeBy: none
+		sourceColumn: downtime_id
+
+	column source_row_id
+		dataType: int64
+		lineageTag: 588f91d0-e17f-43c3-a62c-5b228152b95a
+		summarizeBy: none
+		sourceColumn: source_row_id
+
+	column stop_key
+		dataType: int64
+		lineageTag: 087d6a53-3005-4aa1-96b0-84369ff28c1a
+		summarizeBy: none
+		sourceColumn: stop_key
+
+	column date_key
+		dataType: int64
+		lineageTag: 70aa698e-7125-4ad6-aca6-cf2cabb1f4c0
+		summarizeBy: none
+		sourceColumn: date_key
+
+	column machine_key
+		dataType: int64
+		lineageTag: 0da5995a-725f-423e-b4c2-0e8447224827
+		summarizeBy: none
+		sourceColumn: machine_key
+
+	column shift_key
+		dataType: int64
+		lineageTag: a203cdb8-a439-44e8-8ea3-d2da1710172d
+		summarizeBy: none
+		sourceColumn: shift_key
+
+	column reference_key
+		dataType: int64
+		lineageTag: f833e850-aa07-42a2-849c-766a3ad177e7
+		summarizeBy: none
+		sourceColumn: reference_key
+
+	column source_slot
+		dataType: int64
+		lineageTag: f2856207-b49f-4c0b-b988-53e560871a8a
+		summarizeBy: none
+		sourceColumn: source_slot
+
+	column duration_hours
+		dataType: double
+		lineageTag: 441855d0-4161-4440-9160-54a0442effe5
+		summarizeBy: sum
+		sourceColumn: duration_hours
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column duration_source
+		dataType: string
+		lineageTag: c9f0994e-6f6f-46ae-852b-936abd276d81
+		summarizeBy: none
+		sourceColumn: duration_source
+
+	partition fact_downtime = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("localhost:5433", "vinilos_bi", [CreateNavigationProperties=false, HierarchicalNavigation=false]),
+				    Data = Source{[Schema="dw", Item="vw_downtime_detail"]}[Data]
+				in
+				    Data
+
