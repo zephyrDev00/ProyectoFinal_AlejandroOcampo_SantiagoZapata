@@ -1,5 +1,5 @@
 """Reproducible xlsm -> PostgreSQL dimensional load. Names of staff are never loaded."""
-import os, re, hashlib, json, datetime as dt, warnings
+import os, re, json, datetime as dt, warnings
 from decimal import Decimal
 import openpyxl, psycopg
 warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
@@ -35,7 +35,7 @@ def main():
     wb=openpyxl.load_workbook(SOURCE,read_only=True,data_only=True,keep_vba=True)
     ws=wb['Base De Datos']; it=ws.iter_rows(min_row=9,values_only=True); hdr=next(it)
     cols={str(v).replace('\n',' ').strip():i for i,v in enumerate(hdr) if v}
-    records=[]; invalid=[]; stops={}; seen=set(); qc={'blank_rows':0,'duplicate_content':0,'invalid_date':0,'unknown_machine':0,'negative_measure':0,'missing_shift':0,'missing_reference':0,'downtime_reconciliation_abs_gt_0_02h':0,'legacy_unmapped_stop_rows':0}
+    records=[]; invalid=[]; stops={}; qc={'blank_rows':0,'duplicate_content':0,'invalid_date':0,'unknown_machine':0,'negative_measure':0,'missing_shift':0,'missing_reference':0,'downtime_reconciliation_abs_gt_0_02h':0,'legacy_unmapped_stop_rows':0}
     src_count=0; seen_contents=set()
     for excel_row,row in enumerate(it,10):
         src_count+=1
@@ -47,14 +47,14 @@ def main():
         if not isinstance(date,(dt.datetime,dt.date)): qc['invalid_date']+=1; invalid.append((excel_row,'fecha_invalida')); continue
         if machine not in {'Vinilos_1','Vinilos_2','Vinilos_3','Vinilos_4'}: qc['unknown_machine']+=1; invalid.append((excel_row,'maquina_desconocida')); continue
         d=date.date() if isinstance(date,dt.datetime) else date
-        key=(d,machine,token(row[5]),token(row[11]),n(row[9]),n(row[10]))
         # Keep valid repeats: identical day/shift/product runs can be distinct source records.
         shift=token(row[11]) or 'SIN TURNO'; ref=token(row[5]) or 'SIN REFERENCIA'
         if not token(row[11]): qc['missing_shift']+=1
         if not token(row[5]): qc['missing_reference']+=1
         vals=[n(row[i]) if i<len(row) else None for i in (9,10,12,56)]
         cases,op_hours,nonwork,reported=vals
-        if any(x is not None and x<0 for x in vals): qc['negative_measure']+=1
+        if any(x is not None and x<0 for x in vals):
+            qc['negative_measure']+=1; invalid.append((excel_row,'medida_negativa')); continue
         stop_items=[]; detail_total=Decimal('0')
         for slot,(ci,si,hi) in enumerate(SLOTS,1):
             c=row[ci] if ci<len(row) else None; sub=row[si] if si is not None and si<len(row) else None; dur=n(row[hi] if hi<len(row) else None)
@@ -74,15 +74,25 @@ def main():
     with psycopg.connect(DB) as con:
       with con.cursor() as cur:
         cur.execute("INSERT INTO dw.etl_audit(source_file,source_rows,accepted_rows,rejected_rows,downtime_events,quality_summary) VALUES(%s,%s,%s,%s,%s,%s::jsonb) RETURNING run_id",(os.path.basename(SOURCE),src_count,len(records),len(invalid),sum(len(r[-1]) for r in records),json.dumps(qc))); run_id=cur.fetchone()[0]
+      con.commit()
+    try:
+      with psycopg.connect(DB) as con:
+       with con.cursor() as cur:
+        # The workbook is a source snapshot. Replacing both historical facts avoids stale
+        # values when an operator corrects a row or inserts rows in the spreadsheet.
+        cur.execute("SELECT pg_try_advisory_xact_lock(9042026)")
+        if not cur.fetchone()[0]:
+            raise RuntimeError('Ya hay una carga ETL del histórico en ejecución')
+        cur.execute("TRUNCATE TABLE dw.fact_production CASCADE")
         dates={}
         for r in records:
             d=r[1]; dates[d]=(d.year*10000+d.month*100+d.day,d,MONTHS[d.month],(d.month-1)//3+1,d.isocalendar().week,d.weekday())
         for k,(full,d,mn,q,wk,wd) in dates.items(): cur.execute("INSERT INTO dw.dim_date VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT(date_key) DO NOTHING",(full,d,d.day,d.month,mn,q,d.year,wk,wd,d.strftime('%A'),wd>=5))
-        for i in range(1,5): cur.execute("INSERT INTO dw.dim_machine(machine_code,machine_name,line_number) VALUES(%s,%s,%s) ON CONFLICT(machine_code) DO NOTHING",(f'Vinilos_{i}',f'Vinilos {i}',i))
+        for i in range(1,5): cur.execute("INSERT INTO dw.dim_machine(machine_code,machine_name,line_number) VALUES(%s,%s,%s) ON CONFLICT(machine_code) DO UPDATE SET machine_name=EXCLUDED.machine_name,line_number=EXCLUDED.line_number",(f'Vinilos_{i}',f'Vinilos {i}',i))
         shifts=sorted({r[3] for r in records})
-        for s in shifts: cur.execute("INSERT INTO dw.dim_shift(shift_code,shift_name,shift_group) VALUES(%s,%s,%s) ON CONFLICT(shift_code) DO NOTHING",(s,s,('turno '+s.split('Turno ')[-1] if 'Turno ' in s else 'sin clasificar')))
+        for s in shifts: cur.execute("INSERT INTO dw.dim_shift(shift_code,shift_name,shift_group) VALUES(%s,%s,%s) ON CONFLICT(shift_code) DO UPDATE SET shift_name=EXCLUDED.shift_name,shift_group=EXCLUDED.shift_group",(s,s,('turno '+s.split('Turno ')[-1] if 'Turno ' in s else 'sin clasificar')))
         for ref in sorted({r[4] for r in records}): cur.execute("INSERT INTO dw.dim_reference(reference_name) VALUES(%s) ON CONFLICT(reference_name) DO NOTHING",(ref,))
-        for item in stops.values(): cur.execute("INSERT INTO dw.dim_stop(stop_source_token,stop_code,stop_label,subcode,subcode_label,impact_area,owner_group,hierarchy_level,is_mapped) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT(stop_source_token) DO NOTHING",item)
+        for item in stops.values(): cur.execute("INSERT INTO dw.dim_stop(stop_source_token,stop_code,stop_label,subcode,subcode_label,impact_area,owner_group,hierarchy_level,is_mapped) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT(stop_source_token) DO UPDATE SET stop_code=EXCLUDED.stop_code,stop_label=EXCLUDED.stop_label,subcode=EXCLUDED.subcode,subcode_label=EXCLUDED.subcode_label,impact_area=EXCLUDED.impact_area,owner_group=EXCLUDED.owner_group,hierarchy_level=EXCLUDED.hierarchy_level,is_mapped=EXCLUDED.is_mapped",item)
         for rr,d,m,sh,ref,cases,op,nonwork,reported,stop_items in records:
           dk=d.year*10000+d.month*100+d.day
           cur.execute("SELECT machine_key FROM dw.dim_machine WHERE machine_code=%s",(m,)); mk=cur.fetchone()[0]
@@ -92,7 +102,17 @@ def main():
           for tk,slot,dur,ds,label in stop_items:
             cur.execute("SELECT stop_key FROM dw.dim_stop WHERE stop_source_token=%s",(tk,)); st=cur.fetchone()[0]
             cur.execute("INSERT INTO dw.fact_downtime(source_row_id,stop_key,source_slot,duration_hours,duration_source) VALUES(%s,%s,%s,%s,%s) ON CONFLICT(source_row_id,source_slot) DO NOTHING",(rr,st,slot,dur,ds))
-        cur.execute("UPDATE dw.etl_audit SET finished_at=now(),status='success' WHERE run_id=%s",(run_id,))
-    wb.close(); print(json.dumps({'run_id':run_id,'source_rows':src_count,'accepted':len(records),'rejected':len(invalid),'downtime_events':sum(len(r[-1]) for r in records),'quality':qc},ensure_ascii=False,indent=2))
+       con.commit()
+      with psycopg.connect(DB) as con:
+       with con.cursor() as cur: cur.execute("UPDATE dw.etl_audit SET finished_at=now(),status='success' WHERE run_id=%s",(run_id,))
+       con.commit()
+    except Exception as exc:
+      with psycopg.connect(DB) as con:
+       with con.cursor() as cur: cur.execute("UPDATE dw.etl_audit SET finished_at=now(),status='failed',quality_summary=quality_summary || jsonb_build_object('error',left(%s,1000)) WHERE run_id=%s",(str(exc),run_id))
+       con.commit()
+      raise
+    finally:
+      wb.close()
+    print(json.dumps({'run_id':run_id,'source_rows':src_count,'accepted':len(records),'rejected':len(invalid),'downtime_events':sum(len(r[-1]) for r in records),'quality':qc},ensure_ascii=False,indent=2))
 if __name__=='__main__': main()
 
