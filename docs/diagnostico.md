@@ -14,7 +14,7 @@ Fuente: `Base De Datos` del libro de seguimiento, con encabezado en la fila 9. H
 | Referencia nula | 3.874 (47,2%) | 3.874 con `SIN REFERENCIA` | No imputar referencia |
 | Pacas sin valor numérico | 3.051 (37,2%) | Se conservan como NULL | Cero y desconocido son distintos |
 | Horas trabajadas sin valor numérico | 3.049 (37,1%) | Se conservan como NULL | Cero y desconocido son distintos |
-| Valores negativos en medidas revisadas | 0 | 0 | Futuros negativos se marcan para rechazo/revisión |
+| Valores negativos en medidas revisadas | 0 | 0 | Futuros negativos se rechazan y quedan contados en la auditoría |
 | Filas idénticas en contenido completo | 42 filas excedentes frente a valores únicos | No se eliminan; hay ausencia de ID de evento | Conservar origen por fila Excel, revisar antes de deduplicar |
 
 Las hojas auxiliares contienen catálogos y tablas dinámicas de distintas generaciones; las etiquetas de códigos no tienen un catálogo único plenamente relacionado con cada fila de producción. El ETL conserva causa/subcódigo disponible; si la fuente no permite derivar la causa, la clasifica como no mapeada. No convierte valores ambiguos de las casillas en categorías inventadas. Las columnas de nombres de operario y personal de mantenimiento se excluyen por privacidad.
