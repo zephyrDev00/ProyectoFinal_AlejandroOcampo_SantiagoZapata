@@ -21,7 +21,7 @@ groups:
               editorMode: code
               format: table
               rawQuery: true
-              rawSql: "SELECT COALESCE(100*SUM(downtime_minutes)/NULLIF(SUM(planned_minutes),0),0) AS value FROM dw.fact_live_hour WHERE hour_start >= now()-interval '60 minutes'"
+              rawSql: "SELECT m.machine_code, COALESCE(100*SUM(h.downtime_minutes)/NULLIF(SUM(h.planned_minutes),0),0) AS value FROM dw.fact_live_hour h JOIN dw.dim_machine m USING(machine_key) WHERE h.hour_start >= now()-interval '60 minutes' GROUP BY m.machine_code"
               refId: A
               intervalMs: 1000
               maxDataPoints: 43200
@@ -78,8 +78,8 @@ groups:
         execErrState: Error
         for: 1m
         annotations:
-          summary: "Paro por encima del umbral operativo de demostración"
-          description: "Paro sobre el 20% de los minutos planificados en la última hora. Umbral provisional: validar con Producción."
+          summary: "Paro por encima del umbral operativo de demostración por línea"
+          description: "Paro sobre el 20% de los minutos planificados de una línea en la última hora. Umbral provisional: validar con Producción."
         labels:
           severity: warning
           equipo: vinilos
