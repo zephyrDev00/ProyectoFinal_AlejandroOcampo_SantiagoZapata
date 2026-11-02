@@ -15,7 +15,7 @@ Repositorio GitHub: [ProyectoFinal_AlejandroOcampo_SantiagoZapata](https://githu
 - Grafana 11.4 en `http://localhost:3001`, con filtro por máquina, serie horaria, estado por línea y regla de alerta provisional (>20% en 60 min).
 - Simulador con 24 h por línea; `--trigger` fija 18 min de paro en Vinilos_1 y demuestra el umbral. La captura del tablero está en `docs/screenshots/grafana_operacion.png`. La simulación es manual y no representa señales reales de PLC/SCADA.
 - Proyecto Power BI PBIP/TMDL con consulta a PostgreSQL, medidas semánticas, relaciones dimensionales y visuales PBIR para filtros, KPI, series y Pareto. Configure sus credenciales locales y actualice en Desktop para confirmar la carga. No hay contraseñas en el PBIP.
-- Informe académico en `docs/BI_ProyectoFinal_Ocampo_Zapata.pdf`, con enlace al repositorio. Los scripts `sql/00_native_setup.sql`, `sql/01_schema.sql` y `sql/02_analytics.sql` quedan reservados para que Alejandro los suba en sus commits.
+- Informe académico en `docs/BI_ProyectoFinal_Ocampo_Zapata.pdf`, con enlace al repositorio.
 
 ## Reproducción desde cero
 
