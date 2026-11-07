@@ -1,0 +1,60 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "b2000000000000000008",
+  "position": {
+    "x": 648,
+    "y": 124,
+    "z": 7,
+    "height": 84,
+    "width": 296,
+    "tabOrder": 7
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_downtime"
+                    }
+                  },
+                  "Property": "Duración media por paro (h)"
+                }
+              },
+              "queryRef": "fact_downtime.Duración media por paro (h)",
+              "nativeQueryRef": "Duración media por paro (h)"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Duración media por evento (h)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

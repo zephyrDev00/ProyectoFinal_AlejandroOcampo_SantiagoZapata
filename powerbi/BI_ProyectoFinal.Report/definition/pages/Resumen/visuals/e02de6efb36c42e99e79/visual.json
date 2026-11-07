@@ -3,11 +3,11 @@
   "name": "e02de6efb36c42e99e79",
   "position": {
     "x": 24,
-    "y": 128,
-    "z": 0,
-    "height": 82,
-    "width": 290,
-    "tabOrder": 0
+    "y": 124,
+    "z": 5,
+    "height": 84,
+    "width": 196,
+    "tabOrder": 5
   },
   "visual": {
     "visualType": "card",
@@ -33,6 +33,7 @@
         }
       }
     },
+    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -54,7 +55,6 @@
           }
         }
       ]
-    },
-    "drillFilterOtherVisuals": true
+    }
   }
 }

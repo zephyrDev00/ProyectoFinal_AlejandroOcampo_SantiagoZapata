@@ -3,11 +3,11 @@
   "name": "7cde9bb86feb4f2397b8",
   "position": {
     "x": 24,
-    "y": 220,
-    "z": 0,
+    "y": 218,
+    "z": 11,
     "height": 265,
     "width": 600,
-    "tabOrder": 0
+    "tabOrder": 11
   },
   "visual": {
     "visualType": "lineChart",
@@ -23,12 +23,42 @@
                       "Entity": "dim_date"
                     }
                   },
+                  "Property": "year"
+                }
+              },
+              "queryRef": "dim_date.year",
+              "nativeQueryRef": "year",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
+                  "Property": "month_name"
+                }
+              },
+              "queryRef": "dim_date.month_name",
+              "nativeQueryRef": "month_name",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
                   "Property": "full_date"
                 }
               },
               "queryRef": "dim_date.full_date",
               "nativeQueryRef": "full_date",
-              "active": true
+              "active": false
             }
           ]
         },
@@ -71,6 +101,7 @@
         }
       }
     },
+    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -85,14 +116,13 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Tendencia de producción por línea'"
+                  "Value": "'Tendencia de producción por línea (Año → Mes → Fecha)'"
                 }
               }
             }
           }
         }
       ]
-    },
-    "drillFilterOtherVisuals": true
+    }
   }
 }

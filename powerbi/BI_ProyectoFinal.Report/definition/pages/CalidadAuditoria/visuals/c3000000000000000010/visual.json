@@ -1,0 +1,60 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "c3000000000000000010",
+  "position": {
+    "x": 856,
+    "y": 124,
+    "z": 9,
+    "height": 84,
+    "width": 196,
+    "tabOrder": 9
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_production"
+                    }
+                  },
+                  "Property": "Brecha horas no trabajadas vs paro (h)"
+                }
+              },
+              "queryRef": "fact_production.Brecha horas no trabajadas vs paro (h)",
+              "nativeQueryRef": "Brecha horas no trabajadas vs paro (h)"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Brecha vs. Paro (h)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

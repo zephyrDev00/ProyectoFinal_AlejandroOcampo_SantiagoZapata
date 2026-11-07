@@ -3,14 +3,14 @@
   "name": "50928d1710264c9d93c1",
   "position": {
     "x": 640,
-    "y": 220,
-    "z": 0,
+    "y": 218,
+    "z": 12,
     "height": 265,
     "width": 616,
-    "tabOrder": 0
+    "tabOrder": 12
   },
   "visual": {
-    "visualType": "barChart",
+    "visualType": "lineClusteredColumnComboChart",
     "query": {
       "queryState": {
         "Category": {
@@ -43,7 +43,7 @@
               },
               "queryRef": "dim_stop.subcode_label",
               "nativeQueryRef": "subcode_label",
-              "active": true
+              "active": false
             }
           ]
         },
@@ -64,9 +64,59 @@
               "nativeQueryRef": "Paro detallado (h)"
             }
           ]
+        },
+        "Y2": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_downtime"
+                    }
+                  },
+                  "Property": "% Pareto Acumulado"
+                }
+              },
+              "queryRef": "fact_downtime.% Pareto Acumulado",
+              "nativeQueryRef": "% Pareto Acumulado"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_downtime"
+                    }
+                  },
+                  "Property": "Umbral Pareto 80%"
+                }
+              },
+              "queryRef": "fact_downtime.Umbral Pareto 80%",
+              "nativeQueryRef": "Umbral Pareto 80%"
+            }
+          ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_downtime"
+                  }
+                },
+                "Property": "Paro detallado (h)"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
       }
     },
+    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -81,14 +131,13 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Pareto de paros | causa → subcausa'"
+                  "Value": "'Pareto 80/20 de paros | causa → subcausa (orden descendente)'"
                 }
               }
             }
           }
         }
       ]
-    },
-    "drillFilterOtherVisuals": true
+    }
   }
 }

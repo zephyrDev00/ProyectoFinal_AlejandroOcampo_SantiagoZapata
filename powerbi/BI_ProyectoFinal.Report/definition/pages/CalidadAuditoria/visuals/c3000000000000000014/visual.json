@@ -1,0 +1,386 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "c3000000000000000014",
+  "position": {
+    "x": 24,
+    "y": 478,
+    "z": 13,
+    "height": 220,
+    "width": 1232,
+    "tabOrder": 13
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
+                  "Property": "year"
+                }
+              },
+              "queryRef": "dim_date.year",
+              "nativeQueryRef": "year",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
+                  "Property": "month"
+                }
+              },
+              "queryRef": "dim_date.month",
+              "nativeQueryRef": "month",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
+                  "Property": "month_name"
+                }
+              },
+              "queryRef": "dim_date.month_name",
+              "nativeQueryRef": "month_name",
+              "active": true
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_production"
+                    }
+                  },
+                  "Property": "Registros de producción"
+                }
+              },
+              "queryRef": "fact_production.Registros de producción",
+              "nativeQueryRef": "Registros de producción",
+              "active": false
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_production"
+                    }
+                  },
+                  "Property": "Pacas"
+                }
+              },
+              "queryRef": "fact_production.Pacas",
+              "nativeQueryRef": "Pacas",
+              "active": false
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_production"
+                    }
+                  },
+                  "Property": "Pacas año anterior"
+                }
+              },
+              "queryRef": "fact_production.Pacas año anterior",
+              "nativeQueryRef": "Pacas año anterior",
+              "active": false
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_production"
+                    }
+                  },
+                  "Property": "Variación interanual %"
+                }
+              },
+              "queryRef": "fact_production.Variación interanual %",
+              "nativeQueryRef": "Variación interanual %",
+              "active": false
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_production"
+                    }
+                  },
+                  "Property": "Horas operativas registradas"
+                }
+              },
+              "queryRef": "fact_production.Horas operativas registradas",
+              "nativeQueryRef": "Horas operativas registradas",
+              "active": false
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_production"
+                    }
+                  },
+                  "Property": "Horas no trabajadas reportadas"
+                }
+              },
+              "queryRef": "fact_production.Horas no trabajadas reportadas",
+              "nativeQueryRef": "Horas no trabajadas reportadas",
+              "active": false
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_downtime"
+                    }
+                  },
+                  "Property": "Paro detallado (h)"
+                }
+              },
+              "queryRef": "fact_downtime.Paro detallado (h)",
+              "nativeQueryRef": "Paro detallado (h)",
+              "active": false
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_production"
+                    }
+                  },
+                  "Property": "Disponibilidad proxy"
+                }
+              },
+              "queryRef": "fact_production.Disponibilidad proxy",
+              "nativeQueryRef": "Disponibilidad proxy",
+              "active": false
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "dim_date"
+                  }
+                },
+                "Property": "year"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Tabla de conciliación mensual e inteligencia de tiempo (YoY)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "d498cfa0cc931328300c",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_date"
+              }
+            },
+            "Property": "year"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "ebd37a1e14a16838068c",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_date"
+              }
+            },
+            "Property": "month"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "dc871a29d48d4014d231",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_date"
+              }
+            },
+            "Property": "month_name"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "291f0aa8b24ce6bd8829",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_production"
+              }
+            },
+            "Property": "Registros de producción"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "b44d359d0a5e7643880e",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_production"
+              }
+            },
+            "Property": "Pacas"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "05dd0c7ce3350ce9ed00",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_production"
+              }
+            },
+            "Property": "Pacas año anterior"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "2d404a70bd0d5435a665",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_production"
+              }
+            },
+            "Property": "Variación interanual %"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "8f140db18e09c5cb0434",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_production"
+              }
+            },
+            "Property": "Horas operativas registradas"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "27004c406774567dc05d",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_production"
+              }
+            },
+            "Property": "Horas no trabajadas reportadas"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "e3d672fd303eb0838882",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_downtime"
+              }
+            },
+            "Property": "Paro detallado (h)"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "bcd705be6863a93142d9",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_production"
+              }
+            },
+            "Property": "Disponibilidad proxy"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

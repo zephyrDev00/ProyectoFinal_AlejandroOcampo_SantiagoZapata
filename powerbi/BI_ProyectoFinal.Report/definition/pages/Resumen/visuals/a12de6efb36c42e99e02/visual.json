@@ -1,0 +1,60 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "a12de6efb36c42e99e02",
+  "position": {
+    "x": 648,
+    "y": 124,
+    "z": 8,
+    "height": 84,
+    "width": 196,
+    "tabOrder": 8
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_production"
+                    }
+                  },
+                  "Property": "Pacas por hora"
+                }
+              },
+              "queryRef": "fact_production.Pacas por hora",
+              "nativeQueryRef": "Pacas por hora"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Productividad (pacas/h)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

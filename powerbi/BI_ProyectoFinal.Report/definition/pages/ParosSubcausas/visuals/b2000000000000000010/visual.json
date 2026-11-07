@@ -1,0 +1,143 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "b2000000000000000010",
+  "position": {
+    "x": 24,
+    "y": 218,
+    "z": 10,
+    "height": 250,
+    "width": 680,
+    "tabOrder": 10
+  },
+  "visual": {
+    "visualType": "lineClusteredColumnComboChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_stop"
+                    }
+                  },
+                  "Property": "subcode_label"
+                }
+              },
+              "queryRef": "dim_stop.subcode_label",
+              "nativeQueryRef": "subcode_label",
+              "active": true
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_stop"
+                    }
+                  },
+                  "Property": "stop_label"
+                }
+              },
+              "queryRef": "dim_stop.stop_label",
+              "nativeQueryRef": "stop_label",
+              "active": false
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_downtime"
+                    }
+                  },
+                  "Property": "Paro detallado (h)"
+                }
+              },
+              "queryRef": "fact_downtime.Paro detallado (h)",
+              "nativeQueryRef": "Paro detallado (h)"
+            }
+          ]
+        },
+        "Y2": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_downtime"
+                    }
+                  },
+                  "Property": "% Pareto Acumulado Subcausa"
+                }
+              },
+              "queryRef": "fact_downtime.% Pareto Acumulado Subcausa",
+              "nativeQueryRef": "% Pareto Acumulado Subcausa"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_downtime"
+                    }
+                  },
+                  "Property": "Umbral Pareto 80%"
+                }
+              },
+              "queryRef": "fact_downtime.Umbral Pareto 80%",
+              "nativeQueryRef": "Umbral Pareto 80%"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_downtime"
+                  }
+                },
+                "Property": "Paro detallado (h)"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Pareto de subcausas específicas (Nivel 2: Subcódigo → Categoría)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

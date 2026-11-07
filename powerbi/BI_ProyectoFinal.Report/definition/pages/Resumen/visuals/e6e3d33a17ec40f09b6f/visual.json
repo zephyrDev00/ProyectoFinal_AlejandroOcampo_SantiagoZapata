@@ -4,10 +4,10 @@
   "position": {
     "x": 640,
     "y": 493,
-    "z": 0,
+    "z": 14,
     "height": 205,
     "width": 616,
-    "tabOrder": 0
+    "tabOrder": 14
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -50,8 +50,26 @@
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_downtime"
+                  }
+                },
+                "Property": "Paro detallado (h)"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
       }
     },
+    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -66,14 +84,13 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Horas de paro por turno'"
+                  "Value": "'Horas de paro por turno (orden descendente)'"
                 }
               }
             }
           }
         }
       ]
-    },
-    "drillFilterOtherVisuals": true
+    }
   }
 }

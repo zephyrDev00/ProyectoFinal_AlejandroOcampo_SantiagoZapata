@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "83231cee62f441839ffd",
   "position": {
-    "x": 636,
-    "y": 128,
-    "z": 0,
-    "height": 82,
-    "width": 290,
-    "tabOrder": 0
+    "x": 856,
+    "y": 124,
+    "z": 9,
+    "height": 84,
+    "width": 196,
+    "tabOrder": 9
   },
   "visual": {
     "visualType": "card",
@@ -33,6 +33,7 @@
         }
       }
     },
+    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -47,14 +48,13 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Horas de paro detallado'"
+                  "Value": "'Horas paro detallado'"
                 }
               }
             }
           }
         }
       ]
-    },
-    "drillFilterOtherVisuals": true
+    }
   }
 }

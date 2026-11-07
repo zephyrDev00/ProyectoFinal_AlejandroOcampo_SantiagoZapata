@@ -4,10 +4,10 @@
   "position": {
     "x": 24,
     "y": 493,
-    "z": 0,
+    "z": 13,
     "height": 205,
     "width": 600,
-    "tabOrder": 0
+    "tabOrder": 13
   },
   "visual": {
     "visualType": "clusteredBarChart",
@@ -47,11 +47,43 @@
               },
               "queryRef": "fact_production.Pacas",
               "nativeQueryRef": "Pacas"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_production"
+                    }
+                  },
+                  "Property": "Pacas año anterior"
+                }
+              },
+              "queryRef": "fact_production.Pacas año anterior",
+              "nativeQueryRef": "Pacas año anterior"
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_production"
+                  }
+                },
+                "Property": "Pacas"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
       }
     },
+    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -66,14 +98,13 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Comparativo de producción por línea'"
+                  "Value": "'Comparativo de producción por línea (Actual vs. Año Anterior)'"
                 }
               }
             }
           }
         }
       ]
-    },
-    "drillFilterOtherVisuals": true
+    }
   }
 }

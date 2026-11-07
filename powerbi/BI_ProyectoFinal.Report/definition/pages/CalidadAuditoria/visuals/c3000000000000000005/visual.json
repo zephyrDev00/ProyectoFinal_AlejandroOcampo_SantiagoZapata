@@ -1,0 +1,61 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "c3000000000000000005",
+  "position": {
+    "x": 960,
+    "y": 56,
+    "z": 4,
+    "height": 60,
+    "width": 296,
+    "tabOrder": 4
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_stop"
+                    }
+                  },
+                  "Property": "is_mapped"
+                }
+              },
+              "queryRef": "dim_stop.is_mapped",
+              "nativeQueryRef": "is_mapped",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Causa mapeada a P-MTO-22'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

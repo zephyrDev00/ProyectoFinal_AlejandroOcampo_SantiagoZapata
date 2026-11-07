@@ -1,5 +1,6 @@
 table dim_date
 	lineageTag: 89fe47da-9a7a-4c13-a13c-39d7d344f0d2
+	dataCategory: Time
 
 	column date_key
 		dataType: int64
@@ -9,77 +10,63 @@ table dim_date
 
 	column full_date
 		dataType: dateTime
-		formatString: Long Date
+		isKey
+		formatString: yyyy-mm-dd
 		lineageTag: 8c631436-8063-4414-9f20-749d3d9a3bcc
 		summarizeBy: none
 		sourceColumn: full_date
-
-		variation Variation
-			isDefault
-			relationship: f4dd5f9d-904a-4fb5-b00f-5d4bcb592e88
-			defaultHierarchy: LocalDateTable_eeb34e24-6df7-4161-802a-c5aaccbd9238.'Jerarquía de fechas'
 
 		annotation UnderlyingDateTimeDataType = Date
 
 	column day
 		dataType: int64
 		lineageTag: ddb1c180-1a66-4580-8580-f74ea750067b
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: day
-
-		annotation SummarizationSetBy = Automatic
 
 	column month
 		dataType: int64
 		lineageTag: 4489e327-a5f7-4e11-abca-9747901667c5
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: month
-
-		annotation SummarizationSetBy = Automatic
 
 	column month_name
 		dataType: string
 		lineageTag: 90d50338-b003-4d29-a9d4-ced1e3273d11
 		summarizeBy: none
 		sourceColumn: month_name
+		sortByColumn: month
 
 	column quarter
 		dataType: int64
 		lineageTag: 9adc4945-2dbe-4f39-8a68-a5fce909b80f
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: quarter
-
-		annotation SummarizationSetBy = Automatic
 
 	column year
 		dataType: int64
 		lineageTag: 671183e6-cedb-45e7-938e-ef5634b5d5d2
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: year
-
-		annotation SummarizationSetBy = Automatic
 
 	column iso_week
 		dataType: int64
 		lineageTag: f8b809c6-e5ca-450b-bc06-2812c4d3bba6
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: iso_week
-
-		annotation SummarizationSetBy = Automatic
 
 	column weekday
 		dataType: int64
 		lineageTag: 626a6ded-af82-422e-af2a-8c4c5f760037
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: weekday
-
-		annotation SummarizationSetBy = Automatic
 
 	column weekday_name
 		dataType: string
 		lineageTag: 63c22bda-b22f-41a2-8c40-b54241e31149
 		summarizeBy: none
 		sourceColumn: weekday_name
+		sortByColumn: weekday
 
 	column is_weekend
 		dataType: boolean
@@ -114,4 +101,6 @@ table dim_date
 				    Data = Source{[Schema="dw", Item="dim_date"]}[Data]
 				in
 				    Data
+
+	annotation PBI_ResultType = Table
 

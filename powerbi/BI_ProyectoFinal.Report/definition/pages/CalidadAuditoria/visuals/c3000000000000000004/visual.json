@@ -1,0 +1,61 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "c3000000000000000004",
+  "position": {
+    "x": 648,
+    "y": 56,
+    "z": 3,
+    "height": 60,
+    "width": 296,
+    "tabOrder": 3
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_shift"
+                    }
+                  },
+                  "Property": "shift_group"
+                }
+              },
+              "queryRef": "dim_shift.shift_group",
+              "nativeQueryRef": "shift_group",
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Grupo de turno'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

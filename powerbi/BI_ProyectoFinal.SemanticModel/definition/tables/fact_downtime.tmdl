@@ -9,6 +9,66 @@ table fact_downtime
 		formatString: 0.0%
 		lineageTag: 59e023d4-104a-479f-a3df-45e8e93d201c
 
+	measure '% Participación de paro' = DIVIDE([Paro detallado (h)],CALCULATE([Paro detallado (h)],ALLSELECTED(dim_stop)))
+		formatString: 0.0%
+		lineageTag: 60f134e5-215b-480a-b4ea-56f9fa4e312d
+
+	measure '% Pareto Acumulado' =
+			VAR TotalParoGlobal = CALCULATE([Paro detallado (h)], ALLSELECTED(dim_stop))
+			VAR ParoActual = [Paro detallado (h)]
+			VAR TablaResumen =
+			    ADDCOLUMNS(
+			        ALLSELECTED(dim_stop[stop_label]),
+			        "@Horas", [Paro detallado (h)]
+			    )
+			VAR Acumulado =
+			    SUMX(
+			        FILTER(TablaResumen, [@Horas] >= ParoActual),
+			        [@Horas]
+			    )
+			RETURN
+			    DIVIDE(Acumulado, TotalParoGlobal, BLANK())
+		formatString: 0.0%
+		lineageTag: 71a245f6-326c-491b-c5fb-67a0ab5f423e
+
+	measure '% Pareto Acumulado Subcausa' =
+			VAR TotalParoGlobal = CALCULATE([Paro detallado (h)], ALLSELECTED(dim_stop))
+			VAR ParoActual = [Paro detallado (h)]
+			VAR TablaResumen =
+			    ADDCOLUMNS(
+			        ALLSELECTED(dim_stop[stop_label], dim_stop[subcode_label]),
+			        "@Horas", [Paro detallado (h)]
+			    )
+			VAR Acumulado =
+			    SUMX(
+			        FILTER(TablaResumen, [@Horas] >= ParoActual),
+			        [@Horas]
+			    )
+			RETURN
+			    DIVIDE(Acumulado, TotalParoGlobal, BLANK())
+		formatString: 0.0%
+		lineageTag: 82b356a7-437d-4a2c-d6ac-78b1bc6a534f
+
+	measure 'Umbral Pareto 80%' = 0.80
+		formatString: 0.0%
+		lineageTag: 93c467b8-548e-4b3d-e7bd-89c2cd7b645a
+
+	measure 'Eventos de paro' = COUNTROWS(fact_downtime)
+		formatString: #,##0
+		lineageTag: a4d578c9-659f-4c4e-f8ce-90d3de8c756b
+
+	measure 'Duración media por paro (h)' = AVERAGE(fact_downtime[duration_hours])
+		formatString: #,##0.00
+		lineageTag: b5e689da-76a0-4d5f-a9df-01e4ef9d867c
+
+	measure 'Paro año anterior (h)' = CALCULATE([Paro detallado (h)],SAMEPERIODLASTYEAR(dim_date[full_date]))
+		formatString: #,##0.00
+		lineageTag: c6f790eb-87b1-4e60-baea-12f5fa0e978d
+
+	measure 'Variación paro YoY %' = DIVIDE([Paro detallado (h)]-[Paro año anterior (h)],[Paro año anterior (h)])
+		formatString: 0.0%
+		lineageTag: d7a801fc-98c2-4f71-cbfb-23a6ab1f089e
+
 	column downtime_id
 		dataType: int64
 		lineageTag: e4ab44de-b65e-4a6c-a73b-be7a0ba6db94

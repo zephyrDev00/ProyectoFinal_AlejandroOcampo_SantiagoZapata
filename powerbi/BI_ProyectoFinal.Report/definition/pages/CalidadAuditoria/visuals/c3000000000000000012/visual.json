@@ -1,0 +1,124 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "c3000000000000000012",
+  "position": {
+    "x": 24,
+    "y": 218,
+    "z": 11,
+    "height": 250,
+    "width": 600,
+    "tabOrder": 11
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_machine"
+                    }
+                  },
+                  "Property": "machine_name"
+                }
+              },
+              "queryRef": "dim_machine.machine_name",
+              "nativeQueryRef": "machine_name",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_production"
+                    }
+                  },
+                  "Property": "Horas operativas registradas"
+                }
+              },
+              "queryRef": "fact_production.Horas operativas registradas",
+              "nativeQueryRef": "Horas operativas registradas"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_production"
+                    }
+                  },
+                  "Property": "Horas no trabajadas reportadas"
+                }
+              },
+              "queryRef": "fact_production.Horas no trabajadas reportadas",
+              "nativeQueryRef": "Horas no trabajadas reportadas"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_downtime"
+                    }
+                  },
+                  "Property": "Paro detallado (h)"
+                }
+              },
+              "queryRef": "fact_downtime.Paro detallado (h)",
+              "nativeQueryRef": "Paro detallado (h)"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_production"
+                  }
+                },
+                "Property": "Horas operativas registradas"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Conciliación de tiempos por línea: Operativas vs. No trabajadas vs. Paro detallado'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

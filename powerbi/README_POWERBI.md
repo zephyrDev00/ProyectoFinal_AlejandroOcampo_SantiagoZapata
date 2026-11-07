@@ -1,17 +1,25 @@
-# Proyecto Power BI
+# Proyecto Power BI (Formato PBIP + PBIR + TMDL)
 
-`BI_ProyectoFinal.pbip` apunta al reporte PBIR y al modelo TMDL. El formato de texto se elige porque facilita la revisión y el control de cambios en Git frente a un PBIX binario. Las consultas leen PostgreSQL, no el libro fuente.
+`BI_ProyectoFinal.pbip` (disponible tanto en la raíz del repositorio como dentro de `powerbi/`) apunta al reporte PBIR y al modelo semántico TMDL. Se eligió este formato sobre PBIX binario porque expone todas las definiciones de modelo, medidas DAX y objetos visuales en texto plano legible para control de versiones en Git.
 
-## Conexión
+## Estructura de Páginas del Reporte
 
-El modelo usa `PostgreSQL.Database("localhost:5433", "vinilos_bi")`, esquema `dw`. Cada consulta navega por la clave compuesta `Schema` + `Item` del catálogo PostgreSQL para resolver cada objeto de forma única. La credencial la administra Power BI Desktop en el equipo; no se serializa en el proyecto. Para otra configuración, cambie host/puerto por el entorno, guarde y refresque. El origen incluye `fact_production`, `vw_downtime_detail` y las dimensiones de fecha, máquina, turno, referencia y paro.
+1. **Pág. 1 (`1. Resumen Ejecutivo`)**:
+   - Segmentadores por Año, Línea, Turno y Referencia.
+   - 6 Tarjetas KPI: Pacas producidas, Variación YoY (%), Horas operativas, Productividad (pacas/h), Horas paro detallado y Disponibilidad proxy.
+   - Serie temporal de producción por línea con jerarquía `Año → Mes → Fecha`.
+   - Diagrama de Pareto 80/20 combinado (columnas ordenadas descendentemente por `Paro detallado (h)` + curva `% Pareto Acumulado` + línea de referencia `Umbral Pareto 80%`) con *drill-down* hacia subcausa.
+   - Comparativo de producción por línea (`Pacas` vs. `Pacas año anterior`) y Horas de paro por turno.
 
-## Modelo y medidas
+2. **Pág. 2 (`2. Pareto y Subcausas`)**:
+   - Segmentadores por Año, Línea, Categoría de paro (P-MTO-22) y Grupo responsable (`Operarios` vs. `Personal_de_mantenimiento`).
+   - 4 Tarjetas KPI de paros: Horas de paro detallado, Eventos de paro (16.532 slots), Duración media por evento (h) y Variación interanual de paro (%).
+   - Pareto expandido directamente al Nivel 2 de subcódigos (códigos 01, 03 y 05 del P-MTO-22).
+   - Distribución de horas de paro por grupo responsable y área de impacto.
+   - Tabla de auditoría completa con código, causa, subcódigo, subcausa, eventos, horas, % de participación y % Pareto acumulado.
 
-Relaciones 1:* y filtro unidireccional de las dimensiones hacia ambos hechos. `vw_downtime_detail` añade al evento las llaves de fecha, máquina, turno y referencia sin conectar hechos entre sí. Marcar `dim_date[full_date]` como tabla de fechas. La jerarquía de paro es `dim_stop[stop_label] > dim_stop[subcode_label]`.
-
-El modelo incluye medidas de pacas, horas, disponibilidad proxy, pacas/h, paro detallado, Pareto, comparativo interanual y OEE BLANK (faltan velocidad ideal y piezas buenas/rechazadas). Véase `OEE_DAX.md`.
-
-## Informe
-
-La página inicial contiene segmentadores de año, línea, turno y referencia; tarjetas para pacas, horas operativas, horas de paro y disponibilidad proxy; tendencia de producción por línea; Pareto de paros con jerarquía causa/subcausa; comparación de producción por línea y paros por turno. Los visuales se guardan como archivos JSON PBIR separados para facilitar revisión y control de cambios. Tras cambiar las definiciones, cierre y vuelva a abrir el PBIP en Power BI Desktop para cargar la versión guardada. La disponibilidad es una aproximación con las horas reportadas; el OEE permanece sin calcular hasta contar con tiempo planificado, velocidad ideal y unidades buenas/rechazadas.
+3. **Pág. 3 (`3. Calidad y Conciliación`)**:
+   - Segmentadores por Año, Línea, Grupo de turno y bandera de causa mapeada (`is_mapped`).
+   - 6 Tarjetas de control de calidad: Filas aceptadas (8.208), `% Sin turno` (47,7%), `% Sin referencia` (47,2%), Horas no trabajadas (41.519,85 h), Brecha vs. Paro detallado (33.070,20 h) y OEE Certificado (`BLANK`).
+   - Gráfico comparativo de los 3 conceptos de tiempo por línea y gráfico de completitud de registros.
+   - Tabla de conciliación mensual e inteligencia de tiempo (YoY).

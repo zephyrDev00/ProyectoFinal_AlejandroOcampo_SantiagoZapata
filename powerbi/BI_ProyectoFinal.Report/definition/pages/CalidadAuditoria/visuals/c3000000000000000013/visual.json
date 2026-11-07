@@ -1,0 +1,124 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "c3000000000000000013",
+  "position": {
+    "x": 640,
+    "y": 218,
+    "z": 12,
+    "height": 250,
+    "width": 616,
+    "tabOrder": 12
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_machine"
+                    }
+                  },
+                  "Property": "machine_name"
+                }
+              },
+              "queryRef": "dim_machine.machine_name",
+              "nativeQueryRef": "machine_name",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_production"
+                    }
+                  },
+                  "Property": "Registros de producción"
+                }
+              },
+              "queryRef": "fact_production.Registros de producción",
+              "nativeQueryRef": "Registros de producción"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_production"
+                    }
+                  },
+                  "Property": "Registros sin turno"
+                }
+              },
+              "queryRef": "fact_production.Registros sin turno",
+              "nativeQueryRef": "Registros sin turno"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_production"
+                    }
+                  },
+                  "Property": "Registros sin referencia"
+                }
+              },
+              "queryRef": "fact_production.Registros sin referencia",
+              "nativeQueryRef": "Registros sin referencia"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_production"
+                  }
+                },
+                "Property": "Registros de producción"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Auditoría de completitud por línea (Total registros vs. Sin turno y Sin referencia)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -9,7 +9,7 @@ model Model
 
 annotation PBI_QueryOrder = ["dim_date","dim_machine","dim_shift","dim_reference","dim_stop","fact_production","fact_downtime"]
 
-annotation __PBI_TimeIntelligenceEnabled = 1
+annotation __PBI_TimeIntelligenceEnabled = 0
 
 annotation PBI_ProTooling = ["DevMode"]
 
@@ -20,7 +20,4 @@ ref table dim_reference
 ref table dim_stop
 ref table fact_production
 ref table fact_downtime
-ref table DateTableTemplate_e4407e9d-99c2-48f0-92ca-20f5674c14ee
-ref table LocalDateTable_eeb34e24-6df7-4161-802a-c5aaccbd9238
-ref table LocalDateTable_9033df13-ca16-410e-944b-90aa039c3262
 

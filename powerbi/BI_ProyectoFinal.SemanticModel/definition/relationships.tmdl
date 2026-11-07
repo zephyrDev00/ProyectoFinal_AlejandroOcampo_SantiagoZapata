@@ -34,13 +34,3 @@ relationship fact_downtime_dim_stop_stop_key
 	fromColumn: fact_downtime.stop_key
 	toColumn: dim_stop.stop_key
 
-relationship f4dd5f9d-904a-4fb5-b00f-5d4bcb592e88
-	joinOnDateBehavior: datePartOnly
-	fromColumn: dim_date.full_date
-	toColumn: LocalDateTable_eeb34e24-6df7-4161-802a-c5aaccbd9238.Date
-
-relationship c0edf9fe-8d15-4b92-9057-ca7d08463a0d
-	joinOnDateBehavior: datePartOnly
-	fromColumn: fact_production.loaded_at
-	toColumn: LocalDateTable_9033df13-ca16-410e-944b-90aa039c3262.Date
-

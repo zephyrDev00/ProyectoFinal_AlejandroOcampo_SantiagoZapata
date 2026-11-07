@@ -13,6 +13,10 @@ table fact_production
 		formatString: #,##0.00
 		lineageTag: ea3db612-0b27-41ee-bd94-bb1be3a28e13
 
+	measure 'Horas de paro reportadas (hoja)' = SUM(fact_production[reported_downtime_hours])
+		formatString: #,##0.00
+		lineageTag: 91b4210c-3c14-4d88-9a12-1b8f09bcfe61
+
 	measure 'Disponibilidad proxy' = DIVIDE([Horas operativas registradas],[Horas operativas registradas]+[Horas no trabajadas reportadas])
 		formatString: 0.0%
 		lineageTag: 8b682893-c431-4b0e-b895-4e9323168608
@@ -29,6 +33,38 @@ table fact_production
 		formatString: 0.0%
 		lineageTag: 6865ebe3-0f21-4791-8318-9939b01d37f0
 
+	measure 'Pacas mes anterior' = CALCULATE([Pacas],PREVIOUSMONTH(dim_date[full_date]))
+		formatString: #,##0
+		lineageTag: 2a3896fd-c5b6-4c54-be56-c505eeed8360
+
+	measure 'Variación mensual %' = DIVIDE([Pacas]-[Pacas mes anterior],[Pacas mes anterior])
+		formatString: 0.0%
+		lineageTag: 7976fcf4-1a32-4802-9429-0040c12e98f1
+
+	measure 'Registros de producción' = COUNTROWS(fact_production)
+		formatString: #,##0
+		lineageTag: 3b4907ae-d6c7-4d65-af67-d616fffe9471
+
+	measure 'Registros sin turno' = CALCULATE(COUNTROWS(fact_production),dim_shift[shift_code]="SIN TURNO")
+		formatString: #,##0
+		lineageTag: 4c5018bf-e7d8-4e76-ba78-e727aaaf0582
+
+	measure '% Registros sin turno' = DIVIDE([Registros sin turno],[Registros de producción])
+		formatString: 0.0%
+		lineageTag: 5d6129ca-f8e9-4f87-cb89-f838bbba1693
+
+	measure 'Registros sin referencia' = CALCULATE(COUNTROWS(fact_production),dim_reference[reference_name]="SIN REFERENCIA")
+		formatString: #,##0
+		lineageTag: 6e7230db-a9fa-4a98-dc90-a949cccb2704
+
+	measure '% Registros sin referencia' = DIVIDE([Registros sin referencia],[Registros de producción])
+		formatString: 0.0%
+		lineageTag: 7f8341ec-ba0b-4b09-ed01-b050dddc3815
+
+	measure 'Brecha horas no trabajadas vs paro (h)' = [Horas no trabajadas reportadas]-[Paro detallado (h)]
+		formatString: #,##0.00
+		lineageTag: 8a9452fd-cb1c-4c10-fe12-c161eeed4926
+
 	measure OEE = BLANK()
 		formatString: 0.0%
 		lineageTag: 7ef8b2fd-e501-4a20-b096-6e84ed3c8cbc
@@ -36,10 +72,8 @@ table fact_production
 	column source_row_id
 		dataType: int64
 		lineageTag: 19ba8c78-eae3-48c4-9f83-c2d5a1b26208
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: source_row_id
-
-		annotation SummarizationSetBy = Automatic
 
 	column date_key
 		dataType: int64
@@ -114,21 +148,14 @@ table fact_production
 	column source_excel_row
 		dataType: int64
 		lineageTag: 845b2d19-c378-41d1-8dd2-a6ac28c56a6e
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: source_excel_row
-
-		annotation SummarizationSetBy = Automatic
 
 	column loaded_at
 		dataType: dateTime
 		lineageTag: 1ecdabf5-adb0-40da-bef0-131dd1b652ef
 		summarizeBy: none
 		sourceColumn: loaded_at
-
-		variation Variation
-			isDefault
-			relationship: c0edf9fe-8d15-4b92-9057-ca7d08463a0d
-			defaultHierarchy: LocalDateTable_9033df13-ca16-410e-944b-90aa039c3262.'Jerarquía de fechas'
 
 	partition fact_production = m
 		mode: import
