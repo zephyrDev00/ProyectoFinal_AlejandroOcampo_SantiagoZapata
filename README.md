@@ -94,11 +94,7 @@ DBeaver se utiliza para la administración del esquema y la ejecución de consul
      ```bash
      docker compose --profile etl run --rm etl python simulate.py --trigger
      ```
-8. **Captura automatizada de Grafana (opcional):** Para renderizar capturas PNG mediante el servicio renderer:
-   ```bash
-   docker compose -f docker-compose.yml -f docker-compose.capture.yml --profile capture up -d renderer grafana
-   ```
-9. **Tablero analítico Power BI:** Abra `BI_ProyectoFinal.pbip` (en la raíz o en `powerbi/BI_ProyectoFinal.pbip`) con Power BI Desktop, configure sus credenciales locales para PostgreSQL (`localhost:5433`) y haga clic en **Actualizar** para cargar las 3 páginas del reporte.
+8. **Tablero analítico Power BI:** Abra `BI_ProyectoFinal.pbip` (en la raíz o en `powerbi/BI_ProyectoFinal.pbip`) con Power BI Desktop, configure sus credenciales locales para PostgreSQL (`localhost:5433`) y haga clic en **Actualizar** para cargar las 3 páginas del reporte.
 
 ---
 
